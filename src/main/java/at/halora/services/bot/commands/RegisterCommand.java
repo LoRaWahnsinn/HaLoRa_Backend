@@ -1,6 +1,6 @@
-package at.halora.bot.commands;
+package at.halora.services.bot.commands;
 
-import at.halora.bot.TelegramBot;
+import at.halora.services.bot.TelegramBot;
 
 public class RegisterCommand extends BotCommand {
     public RegisterCommand(TelegramBot bot, Long userId, String command) {
@@ -20,7 +20,7 @@ public class RegisterCommand extends BotCommand {
         String username = parts[1];
 
         //TODO: Check if username already exists
-        //TODO: Send username to businesslogic
+        //TODO: Send username to messagelogic
 
         bot.sendMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
         bot.sendMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");

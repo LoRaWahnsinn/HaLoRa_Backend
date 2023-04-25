@@ -1,6 +1,6 @@
-package at.halora.bot.commands;
+package at.halora.services.bot.commands;
 
-import at.halora.bot.TelegramBot;
+import at.halora.services.bot.TelegramBot;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

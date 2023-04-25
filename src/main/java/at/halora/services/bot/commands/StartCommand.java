@@ -1,6 +1,6 @@
-package at.halora.bot.commands;
+package at.halora.services.bot.commands;
 
-import at.halora.bot.TelegramBot;
+import at.halora.services.bot.TelegramBot;
 
 public class StartCommand extends BotCommand {
     public StartCommand(TelegramBot bot, Long userId, String command) {

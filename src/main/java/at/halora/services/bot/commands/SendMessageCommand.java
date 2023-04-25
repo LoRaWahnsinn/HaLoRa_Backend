@@ -1,7 +1,6 @@
-package at.halora.bot.commands;
+package at.halora.services.bot.commands;
 
-import at.halora.bot.TelegramBot;
-import lombok.AllArgsConstructor;
+import at.halora.services.bot.TelegramBot;
 
 public class SendMessageCommand extends BotCommand {
 
@@ -24,7 +23,7 @@ public class SendMessageCommand extends BotCommand {
 
         //TODO: Check if receiver exists
 
-        //TODO: Send message to businesslogic
+        //TODO: Send message to messagelogic
 
         bot.sendMessage(userId, "Your message \"" + message + "\" has been sent!");
     }

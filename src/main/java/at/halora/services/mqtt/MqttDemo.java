@@ -1,4 +1,4 @@
-package at.halora.businesslogic.mqtt;
+package at.halora.services.mqtt;
 
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -9,15 +9,15 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class MqttHandler {
+public class MqttDemo {
 
     private String publisherId;
 
     private IMqttClient mqttClient;
 
     private enum Topics {
-        UPLINK("ttn/uplink"),
-        DOWNLINK("ttn/downlink");
+        UPLINK("mqtt/uplink"),
+        DOWNLINK("mqtt/downlink");
         private String topic;
 
         Topics(String topic) {
@@ -25,7 +25,7 @@ public class MqttHandler {
         }
     }
 
-    public MqttHandler() {
+    public MqttDemo() {
         publisherId = UUID.randomUUID().toString();
         try {
             //use local mosquitto broker for demonstration

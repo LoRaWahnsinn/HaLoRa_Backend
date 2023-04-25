@@ -1,8 +1,8 @@
-package at.halora.bot;
+package at.halora.services.bot;
 
-import at.halora.bot.commands.*;
+import at.halora.services.bot.commands.*;
 
-class CommandFactory {
+public class CommandFactory {
 
     private final TelegramBot bot;
 

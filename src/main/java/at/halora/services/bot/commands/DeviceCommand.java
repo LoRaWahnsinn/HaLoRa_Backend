@@ -1,6 +1,6 @@
-package at.halora.bot.commands;
+package at.halora.services.bot.commands;
 
-import at.halora.bot.TelegramBot;
+import at.halora.services.bot.TelegramBot;
 
 public class DeviceCommand extends BotCommand {
     public DeviceCommand(TelegramBot bot, Long userId, String command) {
@@ -19,7 +19,7 @@ public class DeviceCommand extends BotCommand {
 
         String deviceId = parts[1];
 
-        //TODO: Send device id to businesslogic
+        //TODO: Send device id to messagelogic
 
         bot.sendMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
         bot.sendMessage(userId, "To switch back to using this Telegram chat, use /telegram.");

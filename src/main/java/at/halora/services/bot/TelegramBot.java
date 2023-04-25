@@ -1,16 +1,30 @@
-package at.halora.bot;
+package at.halora.services.bot;
 
-import at.halora.bot.commands.BotCommand;
+import at.halora.messagelogic.IMessageLogic;
+import at.halora.messagelogic.MessageLogic;
+import at.halora.services.IMessagingService;
+import at.halora.services.bot.commands.BotCommand;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class TelegramBot extends TelegramLongPollingBot {
 
     private CommandFactory commandFactory;
-    public TelegramBot() {
-        this.commandFactory = new CommandFactory(this);
+    private IMessageLogic messageLogic;
+
+    public TelegramBot(IMessageLogic messageLogic) {
+        this.messageLogic = messageLogic;
+    }
+
+    public void setCommandFactory(CommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
+    }
+
+    public void sendMessage(Integer id, String message) {
+
     }
 
     @Override
@@ -61,7 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String username = parts[1];
 
             //TODO: Check if username already exists
-            //TODO: Send username to businesslogic
+            //TODO: Send username to messagelogic
 
             sendMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
             sendMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
@@ -83,7 +97,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             //TODO: Check if receiver exists
 
-            //TODO: Send message to businesslogic
+            //TODO: Send message to messagelogic
 
             sendMessage(userId, "Your message \"" + message + "\" has been sent!");
 
@@ -98,13 +112,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             String deviceId = parts[1];
 
-            //TODO: Send device id to businesslogic
+            //TODO: Send device id to messagelogic
 
             sendMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
             sendMessage(userId, "To switch back to using this Telegram chat, use /telegram.");
         } else if (command.equals("/telegram")) {
 
-            //TODO: Send command to businesslogic to switch user back to telegram
+            //TODO: Send command to messagelogic to switch user back to telegram
 
             sendMessage(userId, "You are now using this Telegram chat to send and receive messages! Use /send <receiver> <message> to send a new message.");
 
@@ -142,5 +156,4 @@ public class TelegramBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
-
 }
