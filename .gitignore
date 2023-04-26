@@ -1,3 +1,4 @@
 .idea
 target
 src/main/java/at/halora/services/AllowedUsers.java
+src/main/java/at/halora/services/bot/AllowedUsers.java

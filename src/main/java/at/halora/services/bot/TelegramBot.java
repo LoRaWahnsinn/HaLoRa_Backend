@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class TelegramBot extends TelegramLongPollingBot {
+public class TelegramBot extends TelegramLongPollingBot implements IMessagingService {
 
     private CommandFactory commandFactory;
     private IMessageLogic messageLogic;
@@ -23,7 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.commandFactory = commandFactory;
     }
 
-    public void sendMessage(Integer id, String message) {
+    public void sendMessage(Long id, String message) {
 
     }
 
@@ -145,15 +145,15 @@ public class TelegramBot extends TelegramLongPollingBot {
         return System.getenv(("HaLoRaBot_Token"));
     }
 
-    public void sendMessage(Long userId, String text) {
-        SendMessage sm = SendMessage.builder()
-                .chatId(userId.toString())
-                .text(text).build();
-
-        try {
-            execute(sm);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void sendMessage(Long userId, String text) {
+//        SendMessage sm = SendMessage.builder()
+//                .chatId(userId.toString())
+//                .text(text).build();
+//
+//        try {
+//            execute(sm);
+//        } catch (TelegramApiException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

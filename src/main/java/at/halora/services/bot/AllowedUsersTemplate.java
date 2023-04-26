@@ -2,7 +2,7 @@
 //Step 2: Uncomment code below
 //Step 3: Add allowed telegram usernames to the list
 
-package at.halora.bot;
+package at.halora.services.bot;
 
 import java.util.ArrayList;
 import java.util.List;

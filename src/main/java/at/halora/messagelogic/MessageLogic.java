@@ -4,11 +4,13 @@ import at.halora.persistance.IUserRepository;
 import at.halora.services.IMessagingService;
 import at.halora.utils.DeviceType;
 
+import java.util.HashMap;
+
 public class MessageLogic implements IMessageLogic {
 
-    private IMessagingService telegramBot;
-    private IMessagingService ttnClient;
     private IUserRepository userRepository;
+
+    private HashMap<DeviceType, IMessagingService> messagingServices = new HashMap<>();
 
     @Override
     public boolean sendMessage(String recipient, String message) {
@@ -30,15 +32,11 @@ public class MessageLogic implements IMessageLogic {
 
     }
 
-    public void setTelegramBot(IMessagingService telegramBot) {
-        this.telegramBot = telegramBot;
-    }
-
-    public void setTtnClient(IMessagingService ttnClient) {
-        this.ttnClient = ttnClient;
-    }
-
     public void setUserRepository(IUserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public void addMessagingService(DeviceType type, IMessagingService messagingService) {
+        messagingServices.put(type, messagingService);
     }
 }

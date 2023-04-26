@@ -13,6 +13,6 @@ public class TTNHandler implements IMessagingService {
     }
 
     @Override
-    public void sendMessage(Integer id, String message) {
+    public void sendMessage(Long id, String message) {
     }
 }
