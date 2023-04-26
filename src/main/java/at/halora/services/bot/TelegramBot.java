@@ -1,19 +1,17 @@
 package at.halora.services.bot;
 
 import at.halora.messagelogic.IMessageLogic;
-import at.halora.messagelogic.MessageLogic;
 import at.halora.services.IMessagingService;
 import at.halora.services.bot.commands.BotCommand;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class TelegramBot extends TelegramLongPollingBot implements IMessagingService {
 
     private CommandFactory commandFactory;
-    private IMessageLogic messageLogic;
+    private final IMessageLogic messageLogic;
 
     public TelegramBot(IMessageLogic messageLogic) {
         this.messageLogic = messageLogic;
@@ -23,6 +21,8 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
         this.commandFactory = commandFactory;
     }
 
+
+    @Override
     public void sendMessage(Long id, String message) {
 
     }
@@ -33,6 +33,8 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
         if (!AllowedUsers.allowedUsers.contains(update.getMessage().getFrom().getId())) { //check if user is on allowedUsers list
             return;
         }
+
+
 
         if (update.getMessage().isCommand()) { //check if message is command
             BotCommand command = commandFactory.create(update.getMessage().getFrom().getId(), update.getMessage().getText());
@@ -53,22 +55,22 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
             //TODO Check if user is already registered
 
-            sendMessage(userId, "Welcome! \uD83D\uDC4B \nBefore you can start using HaLoRa, you need to associate your Telegram Account with a HaLoRa username. Use /register <username> to begin.");
+            sendBotMessage(userId, "Welcome! \uD83D\uDC4B \nBefore you can start using HaLoRa, you need to associate your Telegram Account with a HaLoRa username. Use /register <username> to begin.");
 
         } else if (command.equals("/help")) {
-            sendMessage(userId, "The following commands are available:");
-            sendMessage(userId, "/register <username> - Register a new HaLoRa username");
-            sendMessage(userId, "/device <device_id> - Register a new HaLoRa device");
-            sendMessage(userId, "/telegram - Switch back to using this Telegram chat");
-            sendMessage(userId, "/send <receiver> <message> - Send a new message");
-            sendMessage(userId, "/help - Show this help message");
+            sendBotMessage(userId, "The following commands are available:");
+            sendBotMessage(userId, "/register <username> - Register a new HaLoRa username");
+            sendBotMessage(userId, "/device <device_id> - Register a new HaLoRa device");
+            sendBotMessage(userId, "/telegram - Switch back to using this Telegram chat");
+            sendBotMessage(userId, "/send <receiver> <message> - Send a new message");
+            sendBotMessage(userId, "/help - Show this help message");
         } else if (command.matches("/register.*")) {
 
             //TODO: Check if user is already registered
 
             String[] parts = command.split(" ");
             if (parts.length != 2) {
-                sendMessage(userId, "Invalid format. Use /register <username> to begin.");
+                sendBotMessage(userId, "Invalid format. Use /register <username> to begin.");
                 return;
             }
 
@@ -77,10 +79,10 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
             //TODO: Check if username already exists
             //TODO: Send username to messagelogic
 
-            sendMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
-            sendMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
-            sendMessage(userId, "If you have a HaLoRa device and want to send and receive messages with LoRa, you can register it at any time with /device <device_id>.");
-            sendMessage(userId, "To send a new message, use /send <receiver> <message>.");
+            sendBotMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
+            sendBotMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
+            sendBotMessage(userId, "If you have a HaLoRa device and want to send and receive messages with LoRa, you can register it at any time with /device <device_id>.");
+            sendBotMessage(userId, "To send a new message, use /send <receiver> <message>.");
 
         } else if (command.matches("/send.*")) {
 
@@ -88,7 +90,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
             String[] parts = command.split(" ", 3);
             if (parts.length != 3) {
-                sendMessage(userId, "Invalid format. Use /send <receiver> <message> to send a message.");
+                sendBotMessage(userId, "Invalid format. Use /send <receiver> <message> to send a message.");
                 return;
             }
 
@@ -99,14 +101,14 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
             //TODO: Send message to messagelogic
 
-            sendMessage(userId, "Your message \"" + message + "\" has been sent!");
+            sendBotMessage(userId, "Your message \"" + message + "\" has been sent!");
 
         } else if (command.matches("/device.*")) {
             //TODO: Make sure user is registered with a username
 
             String[] parts = command.split(" ");
             if (parts.length != 2) {
-                sendMessage(userId, "Invalid format. Use /device <device_id> to switch to a HaLoRa device.");
+                sendBotMessage(userId, "Invalid format. Use /device <device_id> to switch to a HaLoRa device.");
                 return;
             }
 
@@ -114,22 +116,22 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
             //TODO: Send device id to messagelogic
 
-            sendMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
-            sendMessage(userId, "To switch back to using this Telegram chat, use /telegram.");
+            sendBotMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
+            sendBotMessage(userId, "To switch back to using this Telegram chat, use /telegram.");
         } else if (command.equals("/telegram")) {
 
             //TODO: Send command to messagelogic to switch user back to telegram
 
-            sendMessage(userId, "You are now using this Telegram chat to send and receive messages! Use /send <receiver> <message> to send a new message.");
+            sendBotMessage(userId, "You are now using this Telegram chat to send and receive messages! Use /send <receiver> <message> to send a new message.");
 
         } else {
-            sendMessage(userId, "Unknown command.");
+            sendBotMessage(userId, "Unknown command.");
         }
 
     }
 
     private void handleText(Long userId, String text) {
-        sendMessage(userId, "Unknown command.");
+        sendBotMessage(userId, "Unknown command.");
         return;
     }
 
@@ -145,15 +147,15 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
         return System.getenv(("HaLoRaBot_Token"));
     }
 
-//    public void sendMessage(Long userId, String text) {
-//        SendMessage sm = SendMessage.builder()
-//                .chatId(userId.toString())
-//                .text(text).build();
-//
-//        try {
-//            execute(sm);
-//        } catch (TelegramApiException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public void sendBotMessage(Long userId, String text) {
+        SendMessage sm = SendMessage.builder()
+                .chatId(userId.toString())
+                .text(text).build();
+
+        try {
+            execute(sm);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

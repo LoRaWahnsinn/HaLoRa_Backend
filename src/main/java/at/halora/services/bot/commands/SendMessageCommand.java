@@ -14,7 +14,7 @@ public class SendMessageCommand extends BotCommand {
 
         String[] parts = command.split(" ", 3);
         if (parts.length != 3) {
-            bot.sendMessage(userId, "Invalid format. Use /send <receiver> <message> to send a message.");
+            bot.sendBotMessage(userId, "Invalid format. Use /send <receiver> <message> to send a message.");
             return;
         }
 
@@ -25,6 +25,6 @@ public class SendMessageCommand extends BotCommand {
 
         //TODO: Send message to messagelogic
 
-        bot.sendMessage(userId, "Your message \"" + message + "\" has been sent!");
+        bot.sendBotMessage(userId, "Your message \"" + message + "\" has been sent!");
     }
 }

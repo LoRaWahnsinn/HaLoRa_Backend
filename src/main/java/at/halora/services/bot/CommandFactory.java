@@ -25,7 +25,7 @@ public class CommandFactory {
             return new BotCommand(bot, userId, command) {
                 @Override
                 public void execute() {
-                    bot.sendMessage(userId, "Unknown command.");
+                    bot.sendBotMessage(userId, "Unknown command.");
                 }
             };
         }

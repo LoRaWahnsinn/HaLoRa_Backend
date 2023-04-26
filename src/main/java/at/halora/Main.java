@@ -31,8 +31,8 @@ public class Main {
         messageLogic.setUserRepository(userRepository);
 
         //inject command factory
-        //CommandFactory commandFactory = new CommandFactory(telegramBot);
-        //telegramBot.setCommandFactory(commandFactory);
+        CommandFactory commandFactory = new CommandFactory(telegramBot);
+        telegramBot.setCommandFactory(commandFactory);
 
         //activate telegram bot
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);

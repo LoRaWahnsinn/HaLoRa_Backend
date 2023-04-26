@@ -13,7 +13,7 @@ public class DeviceCommand extends BotCommand {
 
         String[] parts = command.split(" ");
         if (parts.length != 2) {
-            bot.sendMessage(userId, "Invalid format. Use /device <device_id> to switch to a HaLoRa device.");
+            bot.sendBotMessage(userId, "Invalid format. Use /device <device_id> to switch to a HaLoRa device.");
             return;
         }
 
@@ -21,7 +21,7 @@ public class DeviceCommand extends BotCommand {
 
         //TODO: Send device id to messagelogic
 
-        bot.sendMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
-        bot.sendMessage(userId, "To switch back to using this Telegram chat, use /telegram.");
+        bot.sendBotMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
+        bot.sendBotMessage(userId, "To switch back to using this Telegram chat, use /telegram.");
     }
 }

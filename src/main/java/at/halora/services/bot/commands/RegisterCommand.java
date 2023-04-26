@@ -13,7 +13,7 @@ public class RegisterCommand extends BotCommand {
 
         String[] parts = command.split(" ");
         if (parts.length != 2) {
-            bot.sendMessage(userId, "Invalid format. Use /register <username> to begin.");
+            bot.sendBotMessage(userId, "Invalid format. Use /register <username> to begin.");
             return;
         }
 
@@ -22,9 +22,9 @@ public class RegisterCommand extends BotCommand {
         //TODO: Check if username already exists
         //TODO: Send username to messagelogic
 
-        bot.sendMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
-        bot.sendMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
-        bot.sendMessage(userId, "If you have a HaLoRa device and want to send and receive messages with LoRa, you can register it at any time with /device <device_id>.");
-        bot.sendMessage(userId, "To send a new message, use /send <receiver> <message>.");
+        bot.sendBotMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
+        bot.sendBotMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
+        bot.sendBotMessage(userId, "If you have a HaLoRa device and want to send and receive messages with LoRa, you can register it at any time with /device <device_id>.");
+        bot.sendBotMessage(userId, "To send a new message, use /send <receiver> <message>.");
     }
 }

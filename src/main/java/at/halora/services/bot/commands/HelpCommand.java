@@ -9,11 +9,11 @@ public class HelpCommand extends BotCommand {
 
     @Override
     public void execute() {
-        bot.sendMessage(userId, "The following commands are available:");
-        bot.sendMessage(userId, "/register <username> - Register a new HaLoRa username");
-        bot.sendMessage(userId, "/device <device_id> - Register a new HaLoRa device");
-        bot.sendMessage(userId, "/telegram - Switch back to using this Telegram chat");
-        bot.sendMessage(userId, "/send <receiver> <message> - Send a new message");
-        bot.sendMessage(userId, "/help - Show this help message");
+        bot.sendBotMessage(userId, "The following commands are available:");
+        bot.sendBotMessage(userId, "/register <username> - Register a new HaLoRa username");
+        bot.sendBotMessage(userId, "/device <device_id> - Register a new HaLoRa device");
+        bot.sendBotMessage(userId, "/telegram - Switch back to using this Telegram chat");
+        bot.sendBotMessage(userId, "/send <receiver> <message> - Send a new message");
+        bot.sendBotMessage(userId, "/help - Show this help message");
     }
 }
