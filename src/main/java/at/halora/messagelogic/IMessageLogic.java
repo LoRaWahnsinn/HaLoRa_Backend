@@ -6,5 +6,5 @@ public interface IMessageLogic {
     boolean sendMessage(String recipient, String message);
     boolean registerUser(Long telegramId);
     boolean registerTTNDevice(String username, Long devEUI);
-    void setReceiveMode(DeviceType deviceType);
+    void setReceiveMode(String username, DeviceType deviceType);
 }
