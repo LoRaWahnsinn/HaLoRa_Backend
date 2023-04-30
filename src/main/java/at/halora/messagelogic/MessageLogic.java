@@ -28,7 +28,7 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public void setReceiveMode(DeviceType deviceType) {
+    public void setReceiveMode(String username, DeviceType deviceType) {
 
     }
 
