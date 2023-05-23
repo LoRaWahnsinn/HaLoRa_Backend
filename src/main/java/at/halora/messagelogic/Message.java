@@ -1,13 +1,24 @@
 package at.halora.messagelogic;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
-public record Message(
-        Date timestamp,
-        String sender,
-        String recipient,
-        String message
-) {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Message {
+
+    String timestamp;
+    String sender;
+    String recipient;
+    String message;
+
     @Override
     public String toString() {
         return "Message{" +

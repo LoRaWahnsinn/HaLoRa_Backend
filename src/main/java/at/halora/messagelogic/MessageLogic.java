@@ -14,7 +14,7 @@ public class MessageLogic implements IMessageLogic {
     private HashMap<DeviceType, IMessagingService> messagingServices = new HashMap<>();
 
     @Override
-    public boolean sendMessage(String recipient, String message) {
+    public boolean sendMessage(Message message) {
         return false;
     }
 

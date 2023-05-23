@@ -1,14 +1,18 @@
 package at.halora.services.mqtt;
 
 import at.halora.messagelogic.IMessageLogic;
+import at.halora.messagelogic.Message;
 import at.halora.services.IMessagingService;
-import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.paho.client.mqttv3.*;
 
-import java.util.Properties;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class TTNHandler implements IMessagingService {
 
@@ -49,15 +53,38 @@ public class TTNHandler implements IMessagingService {
     @Override
     public void run() {
         try {
-            mqttClient.subscribe(config.getProperty("MQTT_TOPIC"), (topic, msg) -> {
-                byte[] payload = msg.getPayload();
 
-                String bytes = new String(payload);
-                System.out.println(bytes);
-            });
+            //to do: subscribe to all device topics available
+            mqttClient.subscribe(config.getProperty("MQTT_TOPIC"), this::handleUplink);
 
             while (true); //wait forever
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleUplink(String topic, MqttMessage msg) {
+        byte[] payload = msg.getPayload();
+        String json = new String(payload);
+        System.out.println(json);
+        try {
+            var objectMapper = new ObjectMapper();
+            JsonNode uplinkMessage = objectMapper.readTree(json).path("uplink_message");
+            JsonNode device_id = objectMapper.readTree(json).path("end_device_ids").path("device_id");
+            JsonNode frm_payload = uplinkMessage.path("frm_payload");
+            JsonNode timestamp = objectMapper.readTree(json).path("received_at");
+
+            byte[] decoded_message = Base64.getDecoder().decode(frm_payload.asText());
+            String decoded_string = new String(decoded_message);
+
+            String recipient = decoded_string.split(";")[0];
+            String message = decoded_string.split(";")[1];
+
+            Message msgObj = new Message(timestamp.asText().split("\\.")[0], device_id.asText(), recipient, message);
+
+            messageLogic.sendMessage(msgObj);
+
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
