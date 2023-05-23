@@ -8,13 +8,21 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 public class TelegramBot extends TelegramLongPollingBot implements IMessagingService {
 
     private CommandFactory commandFactory;
     private final IMessageLogic messageLogic;
 
-    public TelegramBot(IMessageLogic messageLogic) {
+    private final Properties config;
+
+    public TelegramBot(IMessageLogic messageLogic, Properties configProperties) {
         this.messageLogic = messageLogic;
+        this.config = configProperties;
     }
 
     public void setCommandFactory(CommandFactory commandFactory) {
@@ -30,11 +38,10 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
     @Override
     public void onUpdateReceived(Update update) {
 
-        if (!AllowedUsers.allowedUsers.contains(update.getMessage().getFrom().getId())) { //check if user is on allowedUsers list
+        if (!getAllowedUsers().contains(update.getMessage().getFrom().getId())) {
+            sendBotMessage(update.getMessage().getFrom().getId(), "Unauthorized User ID. Please Contact the Halora Administrator.");
             return;
         }
-
-
 
         if (update.getMessage().isCommand()) { //check if message is command
             BotCommand command = commandFactory.create(update.getMessage().getFrom().getId(), update.getMessage().getText());
@@ -46,6 +53,13 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
             handleText(update.getMessage().getFrom().getId(), update.getMessage().getText());
             return;
         }
+
+    }
+
+    private List<Long> getAllowedUsers() {
+        var idList = new ArrayList<Long>();
+        Arrays.stream(config.getProperty("BOT_ALLOWED_USERS").split(",")).toList().forEach((s) -> idList.add(Long.valueOf(s)));
+        return idList;
 
     }
 
@@ -138,13 +152,13 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
     @Override
     public String getBotUsername() {
         // Return bot username
-        return "HaLoRaBot";
+        return config.getProperty("BOT_USERNAME");
     }
 
     @Override
     public String getBotToken() {
         // Return bot token from BotFather
-        return System.getenv(("HaLoRaBot_Token"));
+        return config.getProperty("BOT_TOKEN");
     }
 
     public void sendBotMessage(Long userId, String text) {
@@ -157,5 +171,10 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void run() {
+
     }
 }

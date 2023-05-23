@@ -5,6 +5,7 @@ import at.halora.services.IMessagingService;
 import at.halora.utils.DeviceType;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 public class MessageLogic implements IMessageLogic {
 
