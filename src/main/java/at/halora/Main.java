@@ -53,6 +53,8 @@ public class Main {
         //activate telegram bot
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         botsApi.registerBot(telegramBot);
+
+        messageLogic.initMessagingServices();
     }
 
 }
