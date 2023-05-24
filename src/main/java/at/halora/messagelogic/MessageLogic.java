@@ -1,17 +1,16 @@
 package at.halora.messagelogic;
 
-import at.halora.persistance.IUserRepository;
+import at.halora.persistence.IUserRepository;
 import at.halora.services.IMessagingService;
-import at.halora.utils.DeviceType;
+import at.halora.utils.MessagingServiceType;
 
 import java.util.HashMap;
-import java.util.Properties;
 
 public class MessageLogic implements IMessageLogic {
 
     private IUserRepository userRepository;
 
-    private HashMap<DeviceType, IMessagingService> messagingServices = new HashMap<>();
+    private HashMap<MessagingServiceType, IMessagingService> messagingServices = new HashMap<>();
 
     @Override
     public boolean sendMessage(String recipient, String message) {
@@ -29,7 +28,7 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public void setReceiveMode(String username, DeviceType deviceType) {
+    public void setReceiveMode(String username, MessagingServiceType deviceType) {
 
     }
 
@@ -37,7 +36,7 @@ public class MessageLogic implements IMessageLogic {
         this.userRepository = userRepository;
     }
 
-    public void addMessagingService(DeviceType type, IMessagingService messagingService) {
+    public void addMessagingService(MessagingServiceType type, IMessagingService messagingService) {
         messagingServices.put(type, messagingService);
     }
 
