@@ -21,6 +21,8 @@ public class CommandFactory {
             return new HelpCommand(bot, userId, command);
         } else if (command.equals("/device")) {
             return new DeviceCommand(bot, userId, command);
+        } else if (command.matches("/mode.*")) {
+            return new ModeCommand(bot, userId, command);
         } else {
             return new BotCommand(bot, userId, command) {
                 @Override

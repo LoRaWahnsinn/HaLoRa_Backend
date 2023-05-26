@@ -9,7 +9,10 @@ public class StartCommand extends BotCommand {
 
     @Override
     public void execute() {
-        //TODO Check if user is already registered
+        //Check if user is already registered
+        if (bot.getLogic().userExists(userId)) {
+            bot.sendBotMessage(userId, "Welcome " + bot.getLogic().getUsername(userId) + "!");
+        }
         bot.sendBotMessage(userId, "Welcome! \uD83D\uDC4B \nBefore you can start using HaLoRa, you need to associate your Telegram Account with a HaLoRa username. Use /register <username> to begin.");
     }
 }

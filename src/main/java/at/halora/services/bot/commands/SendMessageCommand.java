@@ -1,6 +1,9 @@
 package at.halora.services.bot.commands;
 
+import at.halora.messagelogic.Message;
 import at.halora.services.bot.TelegramBot;
+
+import java.time.LocalTime;
 
 public class SendMessageCommand extends BotCommand {
 
@@ -10,7 +13,11 @@ public class SendMessageCommand extends BotCommand {
 
     @Override
     public void execute() {
-        //TODO: Make sure user is registered with a username
+        //Make sure user is registered with a username
+        if(!bot.getLogic().userExists(userId)) {
+            bot.sendBotMessage(userId, "Your telegram account is not yet registered. Please use /register <username> first.");
+            return;
+        }
 
         String[] parts = command.split(" ", 3);
         if (parts.length != 3) {
@@ -18,12 +25,17 @@ public class SendMessageCommand extends BotCommand {
             return;
         }
 
-        String receiver = parts[1];
+        String receiver = parts[1].toLowerCase();
         String message = parts[2];
 
-        //TODO: Check if receiver exists
+        //Check if receiver exists
+        if (!bot.getLogic().userExists(receiver)) {
+            bot.sendBotMessage(userId, "Failed to send message, user '" + receiver + "' does not exist.");
+            return;
+        }
 
-        //TODO: Send message to messagelogic
+        //Send message to messagelogic
+        bot.getLogic().sendMessage(new Message(LocalTime.now().toString(), bot.getLogic().getUsername(userId), receiver, message));
 
         bot.sendBotMessage(userId, "Your message \"" + message + "\" has been sent!");
     }
