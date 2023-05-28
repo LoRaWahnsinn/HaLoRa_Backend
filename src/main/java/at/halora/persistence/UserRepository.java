@@ -33,42 +33,24 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-
     @Override
     public void createUser(User user) {
-        //todo: puh was bekommen wir da alles?
-        try {
-            datasource.insert_user(user.getUsername());
-            user.setUser_id(getUserByName(user.getUsername()).getUser_id());
-            user.getAccountIds().forEach( (k,v) -> {
-                try {
-                    datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        datasource.insert_user(user.getUsername());
+        user.setUser_id(getUserByName(user.getUsername()).getUser_id());
+        user.getAccountIds().forEach( (k,v) -> {
+            datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
+        });
     }
 
     @Override
     public void updateUser(User user) {
         var oldUser = getUserByName(user.getUsername());
         if (!user.getReceiveAt().equals(oldUser.getReceiveAt())) {
-            try {
-                datasource.updateReceiveAt(user.getUsername(), user.getReceiveAt().getName());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            datasource.updateReceiveAt(user.getUsername(), user.getReceiveAt().getName());
         }
         user.getAccountIds().forEach((k,v) -> {
             if (!oldUser.getAccountIds().get(k).equals(v)) {
-                try {
-                    datasource.update_user_accounts(user.getUser_id(), k.getName(), v);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                datasource.update_user_accounts(user.getUser_id(), k.getName(), v);
             }
         });
     }
@@ -76,9 +58,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<String> getMSIds(MessagingServiceType messagingServiceType) {
         var ids = new ArrayList<String>();
-        ResultSet result;
-        try {
-            result = datasource.selectMSIds(messagingServiceType);
+        try (ResultSet result = datasource.selectMSIds(messagingServiceType)){
             while (result.next()) {
                 ids.add(result.getString("account_id"));
             }
