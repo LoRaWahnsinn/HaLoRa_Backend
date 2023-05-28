@@ -20,8 +20,6 @@ CREATE TABLE IF NOT EXISTS user_accounts (
     CONSTRAINT con_primary_key PRIMARY KEY (user_id, ms_id)
 );
 
-ALTER TABLE users ADD COLUMN receiveAt INTEGER NULL REFERENCES user_accounts (user_account_id);
-
 INSERT INTO messaging_services (ms_id, name) VALUES (1, 'Telegram');
 INSERT INTO messaging_services (ms_id, name) VALUES (2, 'Dora');
 

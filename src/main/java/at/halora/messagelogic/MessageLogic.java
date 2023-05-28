@@ -16,7 +16,7 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public boolean sendMessage(Message message) {
-        User user = userRepository.getUser(message.getRecipient());
+        User user = userRepository.getUserByName(message.getRecipient());
         return messagingServices.get(user.getReceiveAt()).sendMessage(
                 user.getAccountIds().get(user.getReceiveAt()), message.getMessage());
     }
@@ -33,13 +33,18 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public void setReceiveMode(String username, MessagingServiceType deviceType) {
-        var user = userRepository.getUser(username);
+        var user = userRepository.getUserByName(username);
        // userRepository.updateUser();
     }
 
     @Override
-    public User getUser(String accountId) {
+    public User getUserByAccountId(String accountId) {
         return userRepository.getUserByAccountId(accountId);
+    }
+
+    @Override
+    public User getUserByName(String name) {
+        return userRepository.getUserByName(name);
     }
 
 

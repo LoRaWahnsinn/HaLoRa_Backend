@@ -8,7 +8,9 @@ public interface IMessageLogic {
     boolean registerUser(Long telegramId);
     void setReceiveMode(String username, MessagingServiceType deviceType);
     boolean registerTTNDevice(String username, String devEUI);
-    User getUser(String accountId);
+    User getUserByAccountId(String accountId);
+    User getUserByName(String name);
+
 
 
 }

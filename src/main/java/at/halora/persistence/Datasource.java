@@ -1,5 +1,7 @@
 package at.halora.persistence;
 
+import at.halora.utils.MessagingServiceType;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -66,14 +68,28 @@ public class Datasource {
         return pStmt.executeQuery();
     }
 
+    public ResultSet select_user_by_accountId(String accountId) throws SQLException {
+        String sql = "SELECT * FROM users WHERE user_id = (SELECT user_id FROM user_accounts WHERE account_id = ?)";
+        PreparedStatement pStmt = conn.prepareStatement(sql);
+        pStmt.setString(1, accountId);
+        return pStmt.executeQuery();
+    }
+
     public ResultSet select_user_accounts(int user_id) throws SQLException {
         String sql = "SELECT * FROM user_accounts WHERE user_id = ?";
         PreparedStatement pStmt = conn.prepareStatement(sql);
         pStmt.setInt(1,user_id);
         return pStmt.executeQuery();
     }
+
+    public ResultSet selectMSIds(MessagingServiceType messagingServiceType) throws SQLException {
+        String sql = "SELECT * FROM user_accounts WHERE ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?)";
+        PreparedStatement pStmt = conn.prepareStatement(sql);
+        pStmt.setString(1, messagingServiceType.getName());
+        return pStmt.executeQuery();
+    }
     public void insert_user(String name) throws SQLException {
-        String sql = "INSERT INTO users (name) VALUES (?)";
+        String sql = "INSERT INTO users (name, receiveAt) VALUES (?, 1)";
         PreparedStatement pStmt = conn.prepareStatement(sql);
         pStmt.setString(1, name);
         pStmt.execute();
@@ -87,6 +103,14 @@ public class Datasource {
         pStmt.setString(2, MessagingService);
         pStmt.setString(3, account_id);
         pStmt.execute();
+    }
+
+    public void update_user_accounts(int user_id, String messagingService, String account_id) throws SQLException {
+        String sql = "UPDATE user_accounts SET account_id = ? WHERE user_id = ? AND ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?)";
+        PreparedStatement pStmt = conn.prepareStatement(sql);
+        pStmt.setString(1, account_id);
+        pStmt.setInt(2, user_id);
+        pStmt.setString(3, messagingService);
     }
 
     public void updateReceiveAt(String name, String messagingService) throws SQLException {

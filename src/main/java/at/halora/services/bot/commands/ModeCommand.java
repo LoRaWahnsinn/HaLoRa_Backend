@@ -12,7 +12,7 @@ public class ModeCommand extends BotCommand {
 
     @Override
     public void execute() {
-        if(bot.getLogic().getUser(userId.toString()) == null) {
+        if(bot.getLogic().getUserByAccountId(userId.toString()) == null) {
             bot.sendBotMessage(userId, "Your telegram account is not yet registered. Please use /register <username> first.");
             return;
         }
@@ -32,7 +32,7 @@ public class ModeCommand extends BotCommand {
             return;
         }
 
-        bot.getLogic().setReceiveMode(bot.getLogic().getUser(userId.toString()).getUsername(), type);
+        bot.getLogic().setReceiveMode(bot.getLogic().getUserByAccountId(userId.toString()).getUsername(), type);
 
     }
 }
