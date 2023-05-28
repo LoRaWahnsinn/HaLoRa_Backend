@@ -8,10 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.paho.client.mqttv3.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class TTNHandler implements IMessagingService {
@@ -19,6 +15,8 @@ public class TTNHandler implements IMessagingService {
     private IMessageLogic messageLogic;
 
     private final Properties config;
+
+    private final ObjectMapper objectMapper;
 
     private IMqttClient mqttClient;
 
@@ -28,8 +26,9 @@ public class TTNHandler implements IMessagingService {
         this.messageLogic = messageLogic;
         this.config = configProperties;
         publisherId = UUID.randomUUID().toString();
+        objectMapper = new ObjectMapper();
         try {
-            //use local mosquitto broker for demonstration
+
             mqttClient = new MqttClient(config.getProperty("MQTT_URI"), publisherId);
 
             var options = new MqttConnectOptions();
@@ -40,7 +39,7 @@ public class TTNHandler implements IMessagingService {
             options.setUserName(config.getProperty("MQTT_USER")); //applicationId@tenantId
 
             mqttClient.connect(options);
-        } catch (MqttException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -69,7 +68,6 @@ public class TTNHandler implements IMessagingService {
         String json = new String(payload);
         System.out.println(json);
         try {
-            var objectMapper = new ObjectMapper();
             JsonNode uplinkMessage = objectMapper.readTree(json).path("uplink_message");
             JsonNode device_id = objectMapper.readTree(json).path("end_device_ids").path("device_id");
             JsonNode frm_payload = uplinkMessage.path("frm_payload");
@@ -83,10 +81,45 @@ public class TTNHandler implements IMessagingService {
 
             Message msgObj = new Message(timestamp.asText().split("\\.")[0], device_id.asText(), recipient, message);
 
+
             messageLogic.sendMessage(msgObj);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void pushDownlink(String message, String deviceId) {
+
+        //v3/{application id}@{tenant id}/devices/{device id}/down/push
+        final String TOPIC_PUSH = String.format("v3/%s/devices/%s/down/push", config.getProperty("MQTT_USER"), deviceId);
+        final String TOPIC_ACK = String.format("v3/%s/devices/%s/down/ack", config.getProperty("MQTT_USER"), deviceId);
+
+        //create downlink object to publish
+        var downlink = new DownlinkPushWrapper.Downlink();
+        downlink.setPriority("NORMAL");
+        downlink.setFPort(15);
+        downlink.setFrmPayload(Base64.getEncoder().encodeToString(message.getBytes()));
+        var downlinkWrapper = new DownlinkPushWrapper();
+        downlinkWrapper.addDownlink(downlink);
+
+        //publish downlink
+        var m = new MqttMessage();
+        try {
+            m.setPayload(objectMapper.writeValueAsBytes(downlinkWrapper));
+            mqttClient.publish(TOPIC_PUSH, m);
+        } catch (JsonProcessingException | MqttException e) {
+            e.printStackTrace();
+        }
+
+        //subscribe to response
+        try {
+            mqttClient.subscribe(TOPIC_ACK, (topic, msg) -> {
+                var res = objectMapper.readValue(msg.getPayload(), DownlinkAckWrapper.class);
+                System.out.println("Payload: " + res.getDownlinkAck().getFrmPayload() + " to " + res.getEndDeviceIds().getDeviceId() + "acknowledged!");
+            });
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
         }
     }
 }
