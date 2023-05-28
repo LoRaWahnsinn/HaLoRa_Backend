@@ -1,22 +1,24 @@
 package at.halora.messagelogic;
 
-import at.halora.persistance.IUserRepository;
+import at.halora.persistence.IUserRepository;
+import at.halora.persistence.UserEntity;
 import at.halora.services.IMessagingService;
-import at.halora.utils.DeviceType;
+import at.halora.utils.MessagingServiceType;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.HashMap;
-import java.util.Properties;
 
 public class MessageLogic implements IMessageLogic {
 
     private IUserRepository userRepository;
 
-    private HashMap<DeviceType, IMessagingService> messagingServices = new HashMap<>();
+    private HashMap<MessagingServiceType, IMessagingService> messagingServices = new HashMap<>();
 
     @Override
     public boolean sendMessage(Message message) {
-        throw new NotImplementedException();
+        UserEntity user = userRepository.getUser(message.getRecipient());
+        return messagingServices.get(user.getReceiveAt()).sendMessage(
+                user.getAccountIds().get(user.getReceiveAt()), message.getMessage());
     }
 
     @Override
@@ -30,8 +32,9 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public void setReceiveMode(String username, DeviceType deviceType) {
-
+    public void setReceiveMode(String username, MessagingServiceType deviceType) {
+        var user = userRepository.getUser(username);
+       // userRepository.updateUser();
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MessageLogic implements IMessageLogic {
         this.userRepository = userRepository;
     }
 
-    public void addMessagingService(DeviceType type, IMessagingService messagingService) {
+    public void addMessagingService(MessagingServiceType type, IMessagingService messagingService) {
         messagingServices.put(type, messagingService);
     }
 

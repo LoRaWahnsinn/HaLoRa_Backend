@@ -1,26 +1,35 @@
 package at.halora;
 
-import at.halora.messagelogic.IMessageLogic;
 import at.halora.messagelogic.MessageLogic;
-import at.halora.persistance.IUserRepository;
-import at.halora.persistance.UserRepository;
+import at.halora.persistence.Datasource;
+import at.halora.persistence.IUserRepository;
+import at.halora.persistence.UserRepository;
 import at.halora.services.IMessagingService;
 import at.halora.services.bot.CommandFactory;
 import at.halora.services.bot.TelegramBot;
 import at.halora.services.mqtt.TTNHandler;
-import at.halora.utils.DeviceType;
+import at.halora.utils.MessagingServiceType;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
+
+import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) throws TelegramApiException {
+
+        Datasource db = new Datasource();
+        try {
+          //  db.init();
+            db.insert_user_accounts(1, "Telegram", "1234567");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         //load configuration
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
@@ -38,9 +47,9 @@ public class Main {
 
         //create messaging services and add to message logic
         TelegramBot telegramBot = new TelegramBot(messageLogic, properties);
-        messageLogic.addMessagingService(DeviceType.TELEGRAM, telegramBot);
+        messageLogic.addMessagingService(MessagingServiceType.TELEGRAM, telegramBot);
         IMessagingService ttnClient = new TTNHandler(messageLogic, properties);
-        messageLogic.addMessagingService(DeviceType.DORA, ttnClient);
+        messageLogic.addMessagingService(MessagingServiceType.DORA, ttnClient);
 
         //create persistence layer and add to message logic
         IUserRepository userRepository = new UserRepository();

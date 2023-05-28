@@ -1,4 +1,4 @@
-package at.halora.persistance;
+package at.halora.persistence;
 
 public interface IUserRepository {
     UserEntity getUser(String username);

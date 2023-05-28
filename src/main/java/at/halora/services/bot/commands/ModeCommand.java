@@ -1,7 +1,7 @@
 package at.halora.services.bot.commands;
 
 import at.halora.services.bot.TelegramBot;
-import at.halora.utils.DeviceType;
+import at.halora.utils.MessagingServiceType;
 
 import java.util.Objects;
 
@@ -25,7 +25,7 @@ public class ModeCommand extends BotCommand {
 
         String mode = parts[1].toLowerCase();
 
-        DeviceType type = Objects.equals(mode, DeviceType.DORA.name()) ? DeviceType.DORA : (Objects.equals(mode, DeviceType.TELEGRAM.name()) ? DeviceType.TELEGRAM : null);
+        MessagingServiceType type = Objects.equals(mode, MessagingServiceType.DORA.name()) ? MessagingServiceType.DORA : (Objects.equals(mode, MessagingServiceType.TELEGRAM.name()) ? MessagingServiceType.TELEGRAM : null);
 
         if (type == null) {
             bot.sendBotMessage(userId, "Invalid mode type.");

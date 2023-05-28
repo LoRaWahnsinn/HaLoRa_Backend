@@ -1,5 +1,6 @@
 package at.halora.services;
 
 public interface IMessagingService extends Runnable {
-    void sendMessage(Long id, String message);
+    boolean sendMessage(String id, String message);
+
 }
