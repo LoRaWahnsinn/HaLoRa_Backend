@@ -33,7 +33,7 @@ public class RegisterCommand extends BotCommand {
         }
 
         //Check if username already exists
-        if (bot.getLogic().getUser(userId.toString()) != null) {
+        if (bot.getLogic().getUserByAccountId(userId.toString()) != null) {
             bot.sendBotMessage(userId, "Username already taken.");
             return;
         }

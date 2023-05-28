@@ -10,7 +10,7 @@ public class DeviceCommand extends BotCommand {
     @Override
     public void execute() {
         //Make sure user is registered with a username
-        if(bot.getLogic().getUser(userId.toString()) == null) {
+        if(bot.getLogic().getUserByAccountId(userId.toString()) == null) {
             bot.sendBotMessage(userId, "Your telegram account is not yet registered. Please use /register <username> first.");
             return;
         }
@@ -29,7 +29,7 @@ public class DeviceCommand extends BotCommand {
         }
 
         //Send device id to messagelogic
-        if(bot.getLogic().registerTTNDevice(bot.getLogic().getUser(userId.toString()).getUsername(), deviceId)) {
+        if(bot.getLogic().registerTTNDevice(bot.getLogic().getUserByAccountId(userId.toString()).getUsername(), deviceId)) {
             bot.sendBotMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
             bot.sendBotMessage(userId, "To switch back to using this Telegram chat, use /mode telegram.");
         } else {

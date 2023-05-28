@@ -13,10 +13,10 @@ import java.util.HashMap;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    Integer user_id; //id in db
-    String username; //HaLoRa username
-    HashMap<MessagingServiceType, String> accountIds = new HashMap<>(); //user ids for messaging services (telegramId, devEUI, etc.)
-    MessagingServiceType receiveAt; //device to receive messages at
+    private Integer user_id; //id in db
+    private String username; //HaLoRa username
+    private HashMap<MessagingServiceType, String> accountIds = new HashMap<>(); //user ids for messaging services (telegramId, devEUI, etc.)
+    private MessagingServiceType receiveAt; //device to receive messages at
 
 
 }
