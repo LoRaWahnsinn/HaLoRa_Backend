@@ -16,9 +16,8 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public boolean sendMessage(Message message) {
-        User user = userRepository.getUser(message.getRecipient());
-        return messagingServices.get(user.getReceiveAt()).sendMessage(
-                user.getAccountIds().get(user.getReceiveAt()), message.getMessage());
+        User user = message.getRecipient();
+        return messagingServices.get(user.getReceiveAt()).sendMessage(message);
     }
 
     @Override

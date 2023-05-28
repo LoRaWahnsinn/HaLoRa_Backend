@@ -1,8 +1,11 @@
 package at.halora.services.bot;
 
 import at.halora.messagelogic.IMessageLogic;
+import at.halora.messagelogic.Message;
 import at.halora.services.IMessagingService;
 import at.halora.services.bot.commands.BotCommand;
+import at.halora.utils.MessagingServiceType;
+import lombok.NonNull;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -36,7 +39,16 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
 
     @Override
-    public boolean sendMessage(String id, String message) {
+    public boolean sendMessage(@NonNull Message message) {
+        String payload = String.format("Message received from: %s at %s\n" +
+                "Message: %s",
+                message.getSender().getUsername(), message.getTimestamp(), message.getMessage());
+        try {
+            sendBotMessage(Long.valueOf(message.getRecipient().getAccountIds().get(MessagingServiceType.DORA)), payload);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 

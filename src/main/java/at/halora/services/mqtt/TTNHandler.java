@@ -2,10 +2,13 @@ package at.halora.services.mqtt;
 
 import at.halora.messagelogic.IMessageLogic;
 import at.halora.messagelogic.Message;
+import at.halora.persistence.User;
 import at.halora.services.IMessagingService;
+import at.halora.utils.MessagingServiceType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.*;
@@ -46,7 +49,8 @@ public class TTNHandler implements IMessagingService {
     }
 
     @Override
-    public boolean sendMessage(String id, String message) {
+    public boolean sendMessage(@NonNull Message message) {
+        pushDownlink(message.getMessage(), message.getRecipient().getAccountIds().get(MessagingServiceType.DORA));
         return true;
     }
 
@@ -55,7 +59,7 @@ public class TTNHandler implements IMessagingService {
         try {
 
             //to do: subscribe to all device topics available
-            mqttClient.subscribe(config.getProperty("MQTT_TOPIC"), this::handleUplink);
+            mqttClient.subscribe(config.getProperty("MQTT_TOPIC") + "/up", this::handleUplink);
 
             while (true); //wait forever
         } catch (Exception e) {
@@ -68,6 +72,7 @@ public class TTNHandler implements IMessagingService {
         String json = new String(payload);
         System.out.println(json);
         try {
+            //parse Uplink json payload
             JsonNode uplinkMessage = objectMapper.readTree(json).path("uplink_message");
             JsonNode device_id = objectMapper.readTree(json).path("end_device_ids").path("device_id");
             JsonNode frm_payload = uplinkMessage.path("frm_payload");
@@ -76,11 +81,13 @@ public class TTNHandler implements IMessagingService {
             byte[] decoded_message = Base64.getDecoder().decode(frm_payload.asText());
             String decoded_string = new String(decoded_message);
 
-            String recipient = decoded_string.split(";")[0];
+            String recipientStr = decoded_string.split(";")[0];
             String message = decoded_string.split(";")[1];
 
-            Message msgObj = new Message(timestamp.asText().split("\\.")[0], device_id.asText(), recipient, message);
-
+            //build message object
+            User sender = messageLogic.getUserByAccountId(device_id.asText());
+            User recipient = messageLogic.getUserByName(recipientStr);
+            Message msgObj = new Message(timestamp.asText().split("\\.")[0], sender, recipient, message);
 
             messageLogic.sendMessage(msgObj);
 

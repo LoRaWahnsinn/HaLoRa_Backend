@@ -1,5 +1,6 @@
 package at.halora.messagelogic;
 
+import at.halora.persistence.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +16,8 @@ import java.util.Date;
 public class Message {
 
     String timestamp;
-    String sender;
-    String recipient;
+    User sender;
+    User recipient;
     String message;
 
     @Override
