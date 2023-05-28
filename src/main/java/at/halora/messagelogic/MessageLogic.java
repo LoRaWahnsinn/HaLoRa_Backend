@@ -1,7 +1,7 @@
 package at.halora.messagelogic;
 
 import at.halora.persistence.IUserRepository;
-import at.halora.persistence.UserEntity;
+import at.halora.persistence.User;
 import at.halora.services.IMessagingService;
 import at.halora.utils.MessagingServiceType;
 import org.apache.commons.lang3.NotImplementedException;
@@ -16,7 +16,7 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public boolean sendMessage(Message message) {
-        UserEntity user = userRepository.getUser(message.getRecipient());
+        User user = userRepository.getUser(message.getRecipient());
         return messagingServices.get(user.getReceiveAt()).sendMessage(
                 user.getAccountIds().get(user.getReceiveAt()), message.getMessage());
     }
@@ -38,19 +38,10 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public boolean userExists(String username) {
-        throw new NotImplementedException();
+    public User getUser(String accountId) {
+        return userRepository.getUserByAccountId(accountId);
     }
 
-    @Override
-    public boolean userExists(Long telegramId) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public String getUsername(Long telegramId) {
-        throw new NotImplementedException();
-    }
 
     public void setUserRepository(IUserRepository userRepository) {
         this.userRepository = userRepository;

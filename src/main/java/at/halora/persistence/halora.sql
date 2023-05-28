@@ -25,8 +25,3 @@ ALTER TABLE users ADD COLUMN receiveAt INTEGER NULL REFERENCES user_accounts (us
 INSERT INTO messaging_services (ms_id, name) VALUES (1, 'Telegram');
 INSERT INTO messaging_services (ms_id, name) VALUES (2, 'Dora');
 
-INSERT INTO users (name) VALUES ('Oskar');
-INSERT INTO users (name) VALUES ('Jakob');
-INSERT INTO users (name) VALUES ('Tabita');
-INSERT INTO users (name) VALUES ('Alex');
-

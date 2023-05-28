@@ -1,7 +1,8 @@
 package at.halora.persistence;
 
 public interface IUserRepository {
-    UserEntity getUser(String username);
-    void createUser(UserEntity user);
-    void updateUser(UserEntity user);
+    User getUser(String username);
+    User getUserByAccountId(String accountId);
+    void createUser(User user);
+    void updateUser(User user);
 }

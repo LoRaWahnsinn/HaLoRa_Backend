@@ -14,8 +14,8 @@ public class UserRepository implements IUserRepository {
         this.datasource = new Datasource();
     }
     @Override
-    public UserEntity getUser(String username) {
-        UserEntity user = new UserEntity();
+    public User getUser(String username) {
+        User user = new User();
         try (ResultSet result = datasource.select_user_byName(username)) {
             user.setUser_id(result.getInt("user_id"));
             user.setUsername(result.getString("name"));
@@ -39,7 +39,13 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void createUser(UserEntity user) {
+    public User getUserByAccountId(String accountId) {
+        return null;
+    }
+
+
+    @Override
+    public void createUser(User user) {
         //todo: puh was bekommen wir da alles?
         try {
             datasource.insert_user(user.getUsername());
@@ -49,6 +55,6 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void updateUser(UserEntity user) {
+    public void updateUser(User user) {
     }
 }
