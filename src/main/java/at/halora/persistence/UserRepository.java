@@ -84,9 +84,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<String> getMSIds(MessagingServiceType messagingServiceType) {
         var ids = new ArrayList<String>();
-        ResultSet result;
-        try {
-            result = datasource.selectMSIds(messagingServiceType);
+        try (ResultSet result = datasource.selectMSIds(messagingServiceType)){
             while (result.next()) {
                 ids.add(result.getString("account_id"));
             }

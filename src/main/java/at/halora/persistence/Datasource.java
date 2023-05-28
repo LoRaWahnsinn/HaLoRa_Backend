@@ -54,75 +54,96 @@ public class Datasource {
         }
     }
 
-    public ResultSet select_user_byName(String name) throws SQLException {
+    public ResultSet select_user_byName(String name) {
         String sql = "SELECT * FROM users WHERE name = ?";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, name);
-        return pStmt.executeQuery();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, name);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ResultSet select_user_byId(int id) throws SQLException {
-        String sql = "SELECT * FROM users WHERE name = ?";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setInt(1, id);
-        return pStmt.executeQuery();
-    }
-
-    public ResultSet select_user_by_accountId(String accountId) throws SQLException {
+    public ResultSet select_user_by_accountId(String accountId) {
         String sql = "SELECT * FROM users WHERE user_id = (SELECT user_id FROM user_accounts WHERE account_id = ?)";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, accountId);
-        return pStmt.executeQuery();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, accountId);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ResultSet select_user_accounts(int user_id) throws SQLException {
+    public ResultSet select_user_accounts(int user_id) {
         String sql = "SELECT * FROM user_accounts WHERE user_id = ?";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setInt(1,user_id);
-        return pStmt.executeQuery();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setInt(1,user_id);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ResultSet selectMSIds(MessagingServiceType messagingServiceType) throws SQLException {
+    public ResultSet selectMSIds(MessagingServiceType messagingServiceType) {
         String sql = "SELECT * FROM user_accounts WHERE ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?)";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, messagingServiceType.getName());
-        return pStmt.executeQuery();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, messagingServiceType.getName());
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-    public void insert_user(String name) throws SQLException {
+    public void insert_user(String name) {
         String sql = "INSERT INTO users (name, receiveAt) VALUES (?, 1)";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, name);
-        pStmt.execute();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, name);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public void insert_user_accounts(int user_id, String MessagingService, String account_id) throws SQLException {
+    public void insert_user_accounts(int user_id, String MessagingService, String account_id) {
         String sql = "INSERT INTO user_accounts (user_id, ms_id, account_id) VALUES (?, " +
                 "(SELECT ms_id FROM messaging_services WHERE name = ?), ?)";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setInt(1,user_id);
-        pStmt.setString(2, MessagingService);
-        pStmt.setString(3, account_id);
-        pStmt.execute();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setInt(1,user_id);
+            pStmt.setString(2, MessagingService);
+            pStmt.setString(3, account_id);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    public void update_user_accounts(int user_id, String messagingService, String account_id) throws SQLException {
+    public void update_user_accounts(int user_id, String messagingService, String account_id) {
         String sql = "UPDATE user_accounts SET account_id = ? WHERE user_id = ? AND ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?)";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, account_id);
-        pStmt.setInt(2, user_id);
-        pStmt.setString(3, messagingService);
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, account_id);
+            pStmt.setInt(2, user_id);
+            pStmt.setString(3, messagingService);
+            pStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void updateReceiveAt(String name, String messagingService) throws SQLException {
+    public void updateReceiveAt(String name, String messagingService) {
         String sql = "UPDATE users SET (receiveAt) = (SELECT ms_id FROM user_accounts\n" +
                 "                  WHERE user_id = (SELECT user_id FROM users WHERE name = ?)\n" +
                 "                  AND ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?))\n" +
                 "            WHERE name = ?;";
-        PreparedStatement pStmt = conn.prepareStatement(sql);
-        pStmt.setString(1, name);
-        pStmt.setString(2, messagingService);
-        pStmt.setString(3, name);
-        pStmt.executeUpdate();
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, name);
+            pStmt.setString(2, messagingService);
+            pStmt.setString(3, name);
+            pStmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

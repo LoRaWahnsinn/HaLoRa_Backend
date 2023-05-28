@@ -12,7 +12,7 @@ public class MessageLogic implements IMessageLogic {
 
     private IUserRepository userRepository;
 
-    private HashMap<MessagingServiceType, IMessagingService> messagingServices = new HashMap<>();
+    private final HashMap<MessagingServiceType, IMessagingService> messagingServices = new HashMap<>();
 
     @Override
     public boolean sendMessage(Message message) {
@@ -35,6 +35,7 @@ public class MessageLogic implements IMessageLogic {
     @Override
     public void setReceiveMode(String username, MessagingServiceType deviceType) {
         var user = userRepository.getUserByName(username);
+        user.setReceiveAt(deviceType);
 
         userRepository.updateUser(user);
     }
