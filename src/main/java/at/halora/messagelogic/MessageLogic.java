@@ -27,14 +27,16 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public boolean registerTTNDevice(String username, String devEUI) {
-        throw new NotImplementedException();
+    public boolean registerTTNDevice(User user) {
+        userRepository.updateUser(user);
+        return true;
     }
 
     @Override
     public void setReceiveMode(String username, MessagingServiceType deviceType) {
         var user = userRepository.getUserByName(username);
-       // userRepository.updateUser();
+
+        userRepository.updateUser(user);
     }
 
     @Override

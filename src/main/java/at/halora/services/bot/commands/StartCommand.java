@@ -1,5 +1,6 @@
 package at.halora.services.bot.commands;
 
+import at.halora.persistence.User;
 import at.halora.services.bot.TelegramBot;
 
 public class StartCommand extends BotCommand {
@@ -10,8 +11,11 @@ public class StartCommand extends BotCommand {
     @Override
     public void execute() {
         //Check if user is already registered
-        if (bot.getLogic().getUserByAccountId(userId.toString()) == null) {
-            bot.sendBotMessage(userId, "Welcome " + bot.getLogic().getUserByAccountId(userId.toString()).getUsername() + "!");
+        User user = bot.getLogic().getUserByAccountId(userId.toString());
+
+        if (user != null) {
+            bot.sendBotMessage(userId, "Welcome " + user.getUsername() + "!");
+            return;
         }
         bot.sendBotMessage(userId, "Welcome! \uD83D\uDC4B \nBefore you can start using HaLoRa, you need to associate your Telegram Account with a HaLoRa username. Use /register <username> to begin.");
     }

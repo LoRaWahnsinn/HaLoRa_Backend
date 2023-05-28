@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 public enum MessagingServiceType {
-    TELEGRAM(1, "Telegram"),
-    DORA(2, "Dora");
+    TELEGRAM(1, "telegram"),
+    DORA(2, "dora");
 
     @Getter
     @Setter(AccessLevel.PRIVATE)

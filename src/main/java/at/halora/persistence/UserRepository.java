@@ -15,6 +15,7 @@ public class UserRepository implements IUserRepository {
     public UserRepository() {
         this.datasource = new Datasource();
     }
+
     @Override
     public User getUserByName(String username) {
         try {
@@ -40,7 +41,7 @@ public class UserRepository implements IUserRepository {
         try {
             datasource.insert_user(user.getUsername());
             user.setUser_id(getUserByName(user.getUsername()).getUser_id());
-            user.getAccountIds().forEach( (k,v) -> {
+            user.getAccountIds().forEach((k, v) -> {
                 try {
                     datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
                 } catch (SQLException e) {
@@ -62,8 +63,15 @@ public class UserRepository implements IUserRepository {
                 throw new RuntimeException(e);
             }
         }
-        user.getAccountIds().forEach((k,v) -> {
-            if (!oldUser.getAccountIds().get(k).equals(v)) {
+
+        user.getAccountIds().forEach((k, v) -> {
+            if (!oldUser.getAccountIds().containsKey(k)) {
+                try {
+                    datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (!oldUser.getAccountIds().get(k).equals(v)) {
                 try {
                     datasource.update_user_accounts(user.getUser_id(), k.getName(), v);
                 } catch (SQLException e) {
@@ -90,7 +98,7 @@ public class UserRepository implements IUserRepository {
 
     private User getUser(ResultSet r) throws SQLException {
         User user;
-        if (!r.next()){
+        if (!r.next()) {
             return null;
         }
         try (ResultSet result = r) {

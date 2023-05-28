@@ -1,6 +1,7 @@
 package at.halora.services.bot.commands;
 
 import at.halora.services.bot.TelegramBot;
+import at.halora.utils.MessagingServiceType;
 
 public class DeviceCommand extends BotCommand {
     public DeviceCommand(TelegramBot bot, Long userId, String command) {
@@ -23,13 +24,10 @@ public class DeviceCommand extends BotCommand {
 
         String deviceId = parts[1].toLowerCase();
 
-        if (!deviceId.matches("eui-[0-9a-f]+")) {
-            bot.sendBotMessage(userId, "Device Id has wrong format, should look like: 'eui-50f404de40305010'");
-            return;
-        }
-
         //Send device id to messagelogic
-        if(bot.getLogic().registerTTNDevice(bot.getLogic().getUserByAccountId(userId.toString()).getUsername(), deviceId)) {
+        var user = bot.getLogic().getUserByAccountId(userId.toString());
+        user.addAccount(MessagingServiceType.DORA, deviceId);
+        if(bot.getLogic().registerTTNDevice(user)) {
             bot.sendBotMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
             bot.sendBotMessage(userId, "To switch back to using this Telegram chat, use /mode telegram.");
         } else {

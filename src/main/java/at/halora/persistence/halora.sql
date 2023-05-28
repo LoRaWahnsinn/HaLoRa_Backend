@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS messaging_services (
     ms_id INTEGER PRIMARY KEY AUTOINCREMENT ,
     name TEXT NOT NULL
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS user_accounts (
     user_id INTEGER NOT NULL,
     ms_id INTEGER NOT NULL,
-    account_id TEXT NOT NULL,
+    account_id TEXT NOT NULL UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users (user_id),
     FOREIGN KEY (ms_id) REFERENCES messaging_services (ms_id),
     CONSTRAINT con_primary_key PRIMARY KEY (user_id, ms_id)

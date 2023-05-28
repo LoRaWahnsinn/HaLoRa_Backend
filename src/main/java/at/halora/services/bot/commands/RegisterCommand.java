@@ -41,6 +41,12 @@ public class RegisterCommand extends BotCommand {
             bot.sendBotMessage(userId, "Username already taken.");
             return;
         }
+
+        if (bot.getLogic().getUserByAccountId(userId.toString()) != null) {
+            bot.sendBotMessage(userId, "You are already registered.");
+            return;
+        }
+
         //Send username to messagelogic
         var user = new User();
         user.setUsername(username);

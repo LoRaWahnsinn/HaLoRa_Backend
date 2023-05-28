@@ -19,7 +19,7 @@ public class CommandFactory {
             return new RegisterCommand(bot, userId, command);
         } else if (command.equals("/help")) {
             return new HelpCommand(bot, userId, command);
-        } else if (command.equals("/device")) {
+        } else if (command.matches("/device.*")) {
             return new DeviceCommand(bot, userId, command);
         } else if (command.matches("/mode.*")) {
             return new ModeCommand(bot, userId, command);

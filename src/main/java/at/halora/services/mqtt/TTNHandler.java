@@ -25,6 +25,8 @@ public class TTNHandler implements IMessagingService {
 
     private String publisherId;
 
+    private volatile boolean received = false;
+
     public TTNHandler(IMessageLogic messageLogic, Properties configProperties) {
         this.messageLogic = messageLogic;
         this.config = configProperties;
@@ -57,17 +59,14 @@ public class TTNHandler implements IMessagingService {
     @Override
     public void run() {
         try {
-
-            //to do: subscribe to all device topics available
-            mqttClient.subscribe(config.getProperty("MQTT_TOPIC") + "/up", this::handleUplink);
-
-            while (true); //wait forever
+            mqttClient.subscribe(config.getProperty("MQTT_TOPIC"), this::handleUplink);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void handleUplink(String topic, MqttMessage msg) {
+        received = true;
         byte[] payload = msg.getPayload();
         String json = new String(payload);
         System.out.println(json);
@@ -89,6 +88,7 @@ public class TTNHandler implements IMessagingService {
             User recipient = messageLogic.getUserByName(recipientStr);
             Message msgObj = new Message(timestamp.asText().split("\\.")[0], sender, recipient, message);
 
+            System.out.println(msgObj);
             messageLogic.sendMessage(msgObj);
 
         } catch (JsonProcessingException e) {

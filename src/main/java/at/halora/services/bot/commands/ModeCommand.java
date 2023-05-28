@@ -25,7 +25,8 @@ public class ModeCommand extends BotCommand {
 
         String mode = parts[1].toLowerCase();
 
-        MessagingServiceType type = Objects.equals(mode, MessagingServiceType.DORA.name()) ? MessagingServiceType.DORA : (Objects.equals(mode, MessagingServiceType.TELEGRAM.name()) ? MessagingServiceType.TELEGRAM : null);
+        MessagingServiceType type = Objects.equals(mode, MessagingServiceType.DORA.getName()) ? MessagingServiceType.DORA : (Objects.equals(mode, MessagingServiceType.TELEGRAM.getName()) ? MessagingServiceType.TELEGRAM : null);
+
 
         if (type == null) {
             bot.sendBotMessage(userId, "Invalid mode type.");

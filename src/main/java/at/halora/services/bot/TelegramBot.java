@@ -44,7 +44,7 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
                 "Message: %s",
                 message.getSender().getUsername(), message.getTimestamp(), message.getMessage());
         try {
-            sendBotMessage(Long.valueOf(message.getRecipient().getAccountIds().get(MessagingServiceType.DORA)), payload);
+            sendBotMessage(Long.valueOf(message.getRecipient().getAccountIds().get(MessagingServiceType.TELEGRAM)), payload);
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;
