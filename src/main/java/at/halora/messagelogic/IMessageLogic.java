@@ -5,7 +5,7 @@ import at.halora.utils.MessagingServiceType;
 
 public interface IMessageLogic {
     boolean sendMessage(Message message);
-    boolean registerUser(Long telegramId);
+    boolean registerUser(User user);
     void setReceiveMode(String username, MessagingServiceType deviceType);
     boolean registerTTNDevice(String username, String devEUI);
     User getUserByAccountId(String accountId);

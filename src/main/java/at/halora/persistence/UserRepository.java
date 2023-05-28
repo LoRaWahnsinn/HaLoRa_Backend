@@ -39,6 +39,7 @@ public class UserRepository implements IUserRepository {
         //todo: puh was bekommen wir da alles?
         try {
             datasource.insert_user(user.getUsername());
+            user.setUser_id(getUserByName(user.getUsername()).getUser_id());
             user.getAccountIds().forEach( (k,v) -> {
                 try {
                     datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
@@ -87,8 +88,11 @@ public class UserRepository implements IUserRepository {
         return ids;
     }
 
-    private User getUser(ResultSet r) {
+    private User getUser(ResultSet r) throws SQLException {
         User user;
+        if (!r.next()){
+            return null;
+        }
         try (ResultSet result = r) {
             user = createUserFromResultSet(result);
         } catch (SQLException e) {

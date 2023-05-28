@@ -16,7 +16,11 @@ public class User {
     private Integer user_id; //id in db
     private String username; //HaLoRa username
     private HashMap<MessagingServiceType, String> accountIds = new HashMap<>(); //user ids for messaging services (telegramId, devEUI, etc.)
-    private MessagingServiceType receiveAt; //device to receive messages at
+    private MessagingServiceType receiveAt; //device to receive messages
+
+    public void addAccount(MessagingServiceType messagingServiceType, String accountId){
+        accountIds.put(messagingServiceType, accountId);
+    }
 
 
 }

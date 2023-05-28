@@ -24,12 +24,6 @@ public class Main {
     public static void main(String[] args) throws TelegramApiException {
 
         Datasource db = new Datasource();
-        try {
-          //  db.init();
-            db.insert_user_accounts(1, "Telegram", "1234567");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         //load configuration
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();

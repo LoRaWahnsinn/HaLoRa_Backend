@@ -29,13 +29,13 @@ public class SendMessageCommand extends BotCommand {
         String message = parts[2];
 
         //Check if receiver exists
-        if (bot.getLogic().getUserByAccountId(receiver) == null) {
+        if (bot.getLogic().getUserByName(receiver) == null) {
             bot.sendBotMessage(userId, "Failed to send message, user '" + receiver + "' does not exist.");
             return;
         }
 
         //Send message to messagelogic
-        bot.getLogic().sendMessage(new Message(LocalTime.now().toString(), bot.getLogic().getUserByAccountId(userId.toString()).getUsername(), receiver, message));
+        bot.getLogic().sendMessage(new Message(LocalTime.now().toString(), bot.getLogic().getUserByAccountId(userId.toString()), bot.getLogic().getUserByName(receiver), message));
 
         bot.sendBotMessage(userId, "Your message \"" + message + "\" has been sent!");
     }

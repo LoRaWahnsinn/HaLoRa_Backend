@@ -1,6 +1,10 @@
 package at.halora.services.bot.commands;
 
 import at.halora.services.bot.TelegramBot;
+import at.halora.persistence.User;
+import at.halora.utils.MessagingServiceType;
+
+import java.util.HashMap;
 
 public class RegisterCommand extends BotCommand {
     public RegisterCommand(TelegramBot bot, Long userId, String command) {
@@ -33,12 +37,16 @@ public class RegisterCommand extends BotCommand {
         }
 
         //Check if username already exists
-        if (bot.getLogic().getUserByAccountId(userId.toString()) != null) {
+        if (bot.getLogic().getUserByName(username) != null) {
             bot.sendBotMessage(userId, "Username already taken.");
             return;
         }
         //Send username to messagelogic
-        if (bot.getLogic().registerUser(userId)) {
+        var user = new User();
+        user.setUsername(username);
+        user.addAccount(MessagingServiceType.TELEGRAM, userId.toString());
+
+        if (bot.getLogic().registerUser(user)) {
             bot.sendBotMessage(userId, "Welcome " + username + "! Your username is now linked to your telegram account.");
             bot.sendBotMessage(userId, "You will now receive messages from other HaLoRa users through this chat!");
             bot.sendBotMessage(userId, "If you have a HaLoRa device and want to send and receive messages with LoRa, you can register it at any time with /device <device_id>.");

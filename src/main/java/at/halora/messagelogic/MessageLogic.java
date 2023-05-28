@@ -21,8 +21,9 @@ public class MessageLogic implements IMessageLogic {
     }
 
     @Override
-    public boolean registerUser(Long telegramId) {
-        throw new NotImplementedException();
+    public boolean registerUser(User user) {
+        userRepository.createUser(user);
+        return true;
     }
 
     @Override
