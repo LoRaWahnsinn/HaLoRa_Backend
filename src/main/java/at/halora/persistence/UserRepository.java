@@ -40,10 +40,15 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void createUser(UserEntity user) {
+        //todo: puh was bekommen wir da alles?
+        try {
+            datasource.insert_user(user.getUsername());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void updateUser(UserEntity user) {
-
     }
 }

@@ -31,8 +31,8 @@ public class TelegramBot extends TelegramLongPollingBot implements IMessagingSer
 
 
     @Override
-    public void sendMessage(Long id, String message) {
-
+    public boolean sendMessage(String id, String message) {
+        return true;
     }
 
     @Override

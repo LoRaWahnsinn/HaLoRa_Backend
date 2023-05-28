@@ -1,6 +1,7 @@
 package at.halora.messagelogic;
 
 import at.halora.persistence.IUserRepository;
+import at.halora.persistence.UserEntity;
 import at.halora.services.IMessagingService;
 import at.halora.utils.MessagingServiceType;
 
@@ -14,7 +15,9 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public boolean sendMessage(String recipient, String message) {
-        return false;
+        UserEntity user = userRepository.getUser(recipient);
+        return messagingServices.get(user.getReceiveAt()).sendMessage(
+                user.getAccountIds().get(user.getReceiveAt()), message);
     }
 
     @Override
@@ -29,7 +32,8 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public void setReceiveMode(String username, MessagingServiceType deviceType) {
-
+        var user = userRepository.getUser(username);
+       // userRepository.updateUser();
     }
 
     public void setUserRepository(IUserRepository userRepository) {
