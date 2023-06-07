@@ -56,7 +56,8 @@ public class Datasource {
 
     public ResultSet select_user_byName(String name) {
         String sql = "SELECT * FROM users WHERE name = ?";
-        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, name);
             return pStmt.executeQuery();
         } catch (SQLException e) {
@@ -66,7 +67,8 @@ public class Datasource {
 
     public ResultSet select_user_by_accountId(String accountId) {
         String sql = "SELECT * FROM users WHERE user_id = (SELECT user_id FROM user_accounts WHERE account_id = ?)";
-        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+        try  {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, accountId);
             return pStmt.executeQuery();
         } catch (SQLException e) {
@@ -76,7 +78,8 @@ public class Datasource {
 
     public ResultSet select_user_accounts(int user_id) {
         String sql = "SELECT * FROM user_accounts WHERE user_id = ?";
-        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
             pStmt.setInt(1,user_id);
             return pStmt.executeQuery();
         } catch (SQLException e) {
@@ -86,7 +89,8 @@ public class Datasource {
 
     public ResultSet selectMSIds(MessagingServiceType messagingServiceType) {
         String sql = "SELECT * FROM user_accounts WHERE ms_id = (SELECT ms_id FROM messaging_services WHERE name = ?)";
-        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
             pStmt.setString(1, messagingServiceType.getName());
             return pStmt.executeQuery();
         } catch (SQLException e) {
