@@ -52,14 +52,17 @@ public class TTNHandler implements IMessagingService {
 
     @Override
     public boolean sendMessage(@NonNull Message message) {
-        pushDownlink(message.getMessage(), message.getRecipient().getAccountIds().get(MessagingServiceType.DORA));
+        String payload = message.getSender().getUsername() + ";" + message.getMessage();
+        pushDownlink(payload, message.getRecipient().getAccountIds().get(MessagingServiceType.DORA));
         return true;
     }
 
     @Override
     public void run() {
         try {
-            mqttClient.subscribe(config.getProperty("MQTT_TOPIC"), this::handleUplink);
+            while (true) {
+                mqttClient.subscribe(String.format("v3/%s/devices/+/up", config.getProperty("MQTT_USER")), this::handleUplink);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,8 +83,19 @@ public class TTNHandler implements IMessagingService {
             byte[] decoded_message = Base64.getDecoder().decode(frm_payload.asText());
             String decoded_string = new String(decoded_message);
 
+            //ignore query for new messages
+            if (decoded_string.equals("uplink")) {
+                return;
+            }
+
+            if (!decoded_string.matches(".+;.+")) {
+                System.out.println("Wrong payload format! " + decoded_string);
+            }
+
             String recipientStr = decoded_string.split(";")[0];
             String message = decoded_string.split(";")[1];
+
+            //todo: verify if recipient exists
 
             //build message object
             User sender = messageLogic.getUserByAccountId(device_id.asText());

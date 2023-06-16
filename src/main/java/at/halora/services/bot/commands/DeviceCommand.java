@@ -28,8 +28,8 @@ public class DeviceCommand extends BotCommand {
         var user = bot.getLogic().getUserByAccountId(userId.toString());
         user.addAccount(MessagingServiceType.DORA, deviceId);
         if(bot.getLogic().registerTTNDevice(user)) {
-            bot.sendBotMessage(userId, "Your device has been registered. You can now send and receive messages with it.");
-            bot.sendBotMessage(userId, "To switch back to using this Telegram chat, use /mode telegram.");
+            bot.sendBotMessage(userId, "Your device has been registered. You can now send messages with it.");
+            bot.sendBotMessage(userId, "By default you receive new messages in this chat, to change that, use '/mode dora'");
         } else {
             bot.sendBotMessage(userId, "Failed to register device, please try again later.");
         }

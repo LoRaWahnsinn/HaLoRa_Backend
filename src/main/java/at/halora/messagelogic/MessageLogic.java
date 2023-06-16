@@ -4,7 +4,6 @@ import at.halora.persistence.IUserRepository;
 import at.halora.persistence.User;
 import at.halora.services.IMessagingService;
 import at.halora.utils.MessagingServiceType;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.HashMap;
 
@@ -34,6 +33,7 @@ public class MessageLogic implements IMessageLogic {
 
     @Override
     public void setReceiveMode(String username, MessagingServiceType deviceType) {
+        System.out.println("Set receive mode of " + username + "to " + deviceType.getName());
         var user = userRepository.getUserByName(username);
         user.setReceiveAt(deviceType);
 

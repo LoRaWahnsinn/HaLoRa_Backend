@@ -21,6 +21,6 @@ CREATE TABLE IF NOT EXISTS user_accounts (
     CONSTRAINT con_primary_key PRIMARY KEY (user_id, ms_id)
 );
 
-INSERT INTO messaging_services (ms_id, name) VALUES (1, 'Telegram');
-INSERT INTO messaging_services (ms_id, name) VALUES (2, 'Dora');
+INSERT INTO messaging_services (ms_id, name) VALUES (1, 'telegram');
+INSERT INTO messaging_services (ms_id, name) VALUES (2, 'dora');
 
