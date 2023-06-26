@@ -39,6 +39,19 @@ BOT_ALLOWED_USERS=
 5. execute `java -jar target/halora-backend-1.0-SNAPSHOT-jar-with-dependencies.jar`
 6. now the backend should be up and running.
 
+# Bot Commands
+
+**/start** - print a welcome message. If you are already registered you will be greeted with your **username**.
+
+**/send \<recipient> \<message>** - sends a message to an existing halora user
+
+**/register \<username>** - registers your telegram account at halora with the provided username.
+
+**/device \<deviceId>** - associates a device registered at your TheThingsNetwork Account with your HaLoRa Account.
+
+**/mode \<dora|telegram>** - defines whether you want to receive new messages at your LoRaWAN device or within the Bot.
+
+
 # Built with
 - Java
 - Maven
