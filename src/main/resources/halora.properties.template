@@ -1,13 +1,12 @@
+# Key/Password for the mqtt broker
 MQTT_API_KEY=
+
+# e.g. halora@ttn
 MQTT_USER=
 
 # e.g. tcp://mqtt.example.org:1883
 MQTT_URI=
 
-# only temporary, will be removed
-MQTT_TOPIC=
-
-# probably HaLoRaBot
 BOT_USERNAME=
 BOT_TOKEN=
 

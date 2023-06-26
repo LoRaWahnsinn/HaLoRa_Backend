@@ -13,12 +13,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.InputStream;
 import java.util.Properties;
-
-import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) throws TelegramApiException {
@@ -26,12 +23,10 @@ public class Main {
         Datasource db = new Datasource();
 
         //load configuration
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String configPath = rootPath + "halora.properties";
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("halora.properties");
         Properties properties = new Properties();
         try {
-            FileInputStream fileInputStream = new FileInputStream(configPath);
-            properties.load(fileInputStream);
+            properties.load(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

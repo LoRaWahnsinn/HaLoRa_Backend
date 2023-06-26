@@ -3,6 +3,7 @@ package at.halora.persistence;
 import at.halora.utils.MessagingServiceType;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +37,10 @@ public class Datasource {
     //loads halora.sql script and creates the database
     private void init() throws IOException {
 
-        Scanner scanner = new Scanner(Path.of((wd + "/src/main/java/at/halora/persistence/halora.sql")));
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("halora.sql");
+        assert inputStream != null;
+
+        Scanner scanner = new Scanner(inputStream);
         scanner.useDelimiter(";");
 
         try {
