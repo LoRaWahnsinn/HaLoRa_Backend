@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserRepository implements IUserRepository {
 
-    private Datasource datasource;
+    private final Datasource datasource;
 
     public UserRepository() {
         this.datasource = new Datasource();
@@ -59,6 +59,17 @@ public class UserRepository implements IUserRepository {
                 datasource.update_user_accounts(user.getUser_id(), k.getName(), v);
             }
         });
+
+        user.getUserContacts().forEach(userContact -> {
+            if (!oldUser.getUserContacts().contains(userContact)) {
+                datasource.insert_user_user_contacts(user.getUser_id(), userContact.getUser_id());
+            }
+        });
+        user.getGroupContacts().forEach(groupContact -> {
+            if (!oldUser.getGroupContacts().contains(groupContact)) {
+                datasource.insert_user_group_contacts(user.getUser_id(), groupContact.getGroup_id());
+            }
+        });
     }
 
     @Override
@@ -90,6 +101,18 @@ public class UserRepository implements IUserRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        try (ResultSet result = datasource.select_user_user_contacts(user.getUser_id()) ) {
+            user.setUserContacts(setUserContacts(result));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (ResultSet result = datasource.select_user_group_contacts(user.getUser_id()) ) {
+            user.setGroupContacts(setGroupContacts(result));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return user;
     }
 
@@ -101,6 +124,13 @@ public class UserRepository implements IUserRepository {
         return user;
     }
 
+    private Group createGroupFromResultSet(ResultSet result) throws SQLException {
+        var group = new Group();
+        group.setGroup_id(result.getInt("group_id"));
+        group.setGroup_name(result.getString("name"));
+        return group;
+    }
+
     private HashMap<MessagingServiceType, String> setAccounts(ResultSet result) throws SQLException {
         HashMap<MessagingServiceType, String> accountIds = new HashMap<>();
         while (result.next()) {
@@ -109,4 +139,23 @@ public class UserRepository implements IUserRepository {
         }
         return accountIds;
     }
+
+    private ArrayList<User> setUserContacts(ResultSet result) throws SQLException {
+        ArrayList<User> userContacts = new ArrayList<>();
+        while (result.next()) {
+            userContacts.add(createUserFromResultSet(
+                    datasource.select_user_by_userId(result.getInt("user_id"))));
+        }
+        return userContacts;
+    }
+
+    private ArrayList<Group> setGroupContacts(ResultSet result) throws SQLException {
+        ArrayList<Group> groupContacts = new ArrayList<>();
+        while (result.next()) {
+            groupContacts.add(createGroupFromResultSet(
+                    datasource.select_group_by_id(result.getInt("group_id"))));
+        }
+        return groupContacts;
+    }
+
 }

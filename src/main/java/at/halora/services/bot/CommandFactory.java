@@ -23,6 +23,10 @@ public class CommandFactory {
             return new DeviceCommand(bot, userId, command);
         } else if (command.matches("/mode.*")) {
             return new ModeCommand(bot, userId, command);
+        } else if (command.matches("/contacts.*")) {
+            return new ContactsCommand(bot, userId, command);
+        }else if (command.matches("/group.*")) {
+            return new GroupCommand(bot, userId, command);
         } else {
             return new BotCommand(bot, userId, command) {
                 @Override

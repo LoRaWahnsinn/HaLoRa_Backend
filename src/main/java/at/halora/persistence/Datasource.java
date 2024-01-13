@@ -80,6 +80,17 @@ public class Datasource {
         }
     }
 
+    public ResultSet select_user_by_userId(int userId) {
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try  {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1, userId);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public ResultSet select_user_accounts(int user_id) {
         String sql = "SELECT * FROM user_accounts WHERE user_id = ?";
         try {
@@ -109,7 +120,6 @@ public class Datasource {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void insert_user_accounts(int user_id, String MessagingService, String account_id) {
@@ -153,5 +163,106 @@ public class Datasource {
         }
 
     }
+
+    public void insert_group(String name) {
+        String sql = "INSERT INTO groups (name) VALUES (?)";
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setString(1, name);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet select_group(String name) {
+        String sql = "SELECT * FROM groups WHERE name = ?";
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setString(1, name);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet select_group_by_id(int group_id) {
+        String sql = "SELECT * FROM groups WHERE name = ?";
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1, group_id);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void insert_group_users(int group_id, int user_id) {
+        String sql = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setInt(1,group_id);
+            pStmt.setInt(2, user_id);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet select_group_users(int group_id) {
+        String sql = "SELECT * FROM group_users WHERE group_id = ?";
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1,group_id);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void insert_user_user_contacts(int user_id, int contact_id) {
+        String sql = "INSERT INTO user_user_contacts (user_id, contact_id) VALUES (?, ?)";
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setInt(1, user_id);
+            pStmt.setInt(2, contact_id);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet select_user_user_contacts(int user_id) {
+        String sql = "SELECT * FROM user_user_contacts WHERE user_id = ?";
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1,user_id);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void insert_user_group_contacts(int user_id, int group_id) {
+        String sql = "INSERT INTO user_group_contacts (user_id, group_id) VALUES (?, ?)";
+        try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            pStmt.setInt(1, user_id);
+            pStmt.setInt(2, group_id);
+            pStmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ResultSet select_user_group_contacts(int user_id) {
+        String sql = "SELECT * FROM user_group_contacts WHERE user_id = ?";
+        try {
+            PreparedStatement pStmt = conn.prepareStatement(sql);
+            pStmt.setInt(1,user_id);
+            return pStmt.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 
 }

@@ -1,5 +1,7 @@
 package at.halora.messagelogic;
 
+import at.halora.persistence.Group;
+import at.halora.persistence.IGroupRepository;
 import at.halora.persistence.IUserRepository;
 import at.halora.persistence.User;
 import at.halora.services.IMessagingService;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 public class MessageLogic implements IMessageLogic {
 
     private IUserRepository userRepository;
+    private IGroupRepository groupRepository;
 
     private final HashMap<MessagingServiceType, IMessagingService> messagingServices = new HashMap<>();
 
@@ -48,6 +51,26 @@ public class MessageLogic implements IMessageLogic {
     @Override
     public User getUserByName(String name) {
         return userRepository.getUserByName(name);
+    }
+
+    @Override
+    public void createGroup(Group group) {
+        groupRepository.createGroup(group);
+    }
+
+    @Override
+    public void addGroupMember(String groupName, String userName) {
+
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
+    }
+
+    @Override
+    public Group getGroupByName(String name) {
+        return groupRepository.getGroupByName(name);
     }
 
 
