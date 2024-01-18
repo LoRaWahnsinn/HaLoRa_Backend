@@ -58,16 +58,15 @@ public class MessageLogic implements IMessageLogic {
         groupRepository.createGroup(group);
     }
 
-    @Override
-    public void addGroupMember(String groupName, String userName) {
-
-    }
 
     @Override
     public void updateUser(User user) {
         userRepository.updateUser(user);
     }
 
+    public void updateGroup(Group group) {
+        groupRepository.updateGroup(group);
+    }
     @Override
     public Group getGroupByName(String name) {
         return groupRepository.getGroupByName(name);

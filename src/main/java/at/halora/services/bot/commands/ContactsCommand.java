@@ -21,7 +21,7 @@ public class ContactsCommand extends BotCommand{
             return;
         }
 
-        String[] parts = command.split(" ", 3);
+        String[] parts = command.split(" ", 4);
         if (parts.length != 3 && parts.length != 4  || (parts.length == 3 && !parts[1].equals("list")) ||
                 (parts.length == 4 && !parts[1].equals("add"))){
             abort();

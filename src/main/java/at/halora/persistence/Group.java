@@ -15,4 +15,8 @@ public class Group {
     private Integer group_id;
     private String group_name;
     private ArrayList<User> members;
+
+    public void addMember(User user){
+        this.members.add(user);
+    }
 }

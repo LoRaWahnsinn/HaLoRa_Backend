@@ -60,11 +60,32 @@ public class UserRepository implements IUserRepository {
             }
         });
 
-        user.getUserContacts().forEach(userContact -> {
-            if (!oldUser.getUserContacts().contains(userContact)) {
+        for (User userContact : user.getUserContacts()) {
+            boolean n = false;
+            for (User oldUserContact : oldUser.getUserContacts()) {
+                if (userContact.getUser_id().equals(oldUserContact.getUser_id())) {
+                    n = true;
+                    break;
+                }
+            }
+            if (!n) {
                 datasource.insert_user_user_contacts(user.getUser_id(), userContact.getUser_id());
             }
-        });
+        }
+
+        for (Group groupContact : user.getGroupContacts()) {
+            boolean n = false;
+            for (Group oldGroupContact : oldUser.getGroupContacts()) {
+                if (groupContact.getGroup_id().equals(oldGroupContact.getGroup_id())) {
+                    n = true;
+                    break;
+                }
+            }
+            if (!n) {
+                datasource.insert_user_group_contacts(user.getUser_id(), groupContact.getGroup_id());
+            }
+        }
+
         user.getGroupContacts().forEach(groupContact -> {
             if (!oldUser.getGroupContacts().contains(groupContact)) {
                 datasource.insert_user_group_contacts(user.getUser_id(), groupContact.getGroup_id());
@@ -144,7 +165,7 @@ public class UserRepository implements IUserRepository {
         ArrayList<User> userContacts = new ArrayList<>();
         while (result.next()) {
             userContacts.add(createUserFromResultSet(
-                    datasource.select_user_by_userId(result.getInt("user_id"))));
+                    datasource.select_user_by_userId(result.getInt("contact_id"))));
         }
         return userContacts;
     }

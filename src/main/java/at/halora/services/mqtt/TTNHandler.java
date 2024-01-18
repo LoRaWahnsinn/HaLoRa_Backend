@@ -86,6 +86,16 @@ public class TTNHandler implements IMessagingService {
             //ignore query for new messages
             if (decoded_string.equals("uplink")) {
                 return;
+            } else if (decoded_string.equals("usercontacts")) {
+                User user = messageLogic.getUserByAccountId(device_id.asText());
+                StringBuilder sb = new StringBuilder("usercontacts:");
+                user.getUserContacts().forEach(x -> sb.append(x.getUsername()).append(";"));
+                this.pushDownlink(sb.toString(), device_id.asText());
+            } else if (decoded_string.equals("groupcontacts")) {
+                User user = messageLogic.getUserByAccountId(device_id.asText());
+                StringBuilder sb = new StringBuilder("groupcontacts:");
+                user.getGroupContacts().forEach(x -> sb.append(x.getGroup_name()).append(";"));
+                this.pushDownlink(sb.toString(), device_id.asText());
             }
 
             if (!decoded_string.matches(".+;.+")) {

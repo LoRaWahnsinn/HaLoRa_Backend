@@ -8,7 +8,6 @@ public interface IGroupRepository {
     Group getGroupByName(String name);
     Group getGroupById(Integer group_id);
 
-    void addGroupMember(Group group, User user);
-    List<User> getGroupMembers(Group group);
+    void updateGroup(Group group);
 
 }

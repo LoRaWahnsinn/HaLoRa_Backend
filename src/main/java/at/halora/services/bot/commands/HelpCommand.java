@@ -14,6 +14,8 @@ public class HelpCommand extends BotCommand {
         bot.sendBotMessage(userId, "/device <device_id> - Register a new HaLoRa device");
         bot.sendBotMessage(userId, "/mode <dora|telegram> - Set your receiving mode");
         bot.sendBotMessage(userId, "/send <receiver> <message> - Send a new message");
+        bot.sendBotMessage(userId, "/contacts list <users/groups> - List your user / group contacts");
+        bot.sendBotMessage(userId, "/contacts add <user/group> <name> - Add a new contact");
         bot.sendBotMessage(userId, "/help - Show this help message");
     }
 }

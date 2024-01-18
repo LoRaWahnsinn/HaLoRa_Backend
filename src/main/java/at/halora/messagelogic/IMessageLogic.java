@@ -16,9 +16,9 @@ public interface IMessageLogic {
 
     void createGroup(Group group);
 
-    void addGroupMember(String groupName, String userName);
-
     void updateUser(User user);
+
+    void updateGroup(Group group);
 
     Group getGroupByName(String name);
 

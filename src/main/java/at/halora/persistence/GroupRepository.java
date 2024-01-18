@@ -35,14 +35,72 @@ public class GroupRepository implements IGroupRepository{
     }
 
     @Override
-    public void addGroupMember(Group group, User user) {
+    public void updateGroup(Group group) {
+        var oldGroup = getGroupByName(group.getGroup_name());
+
+        for (User member : group.getMembers()) {
+            boolean n = false;
+            for (User oldMember : oldGroup.getMembers()) {
+                if (member.getUser_id().equals(oldMember.getUser_id())) {
+                    n = true;
+                    break;
+                }
+            }
+            if (!n) {
+                datasource.insert_group_users(group.getGroup_id(), member.getUser_id());
+            }
+        }
 
     }
 
-    @Override
-    public List<User> getGroupMembers(Group group) {
-        return null;
-    }
+    /*@Override
+    public void updateUser(User user) {
+        var oldUser = getUserByName(user.getUsername());
+        if (!user.getReceiveAt().equals(oldUser.getReceiveAt())) {
+            datasource.updateReceiveAt(user.getUsername(), user.getReceiveAt().getName());
+        }
+
+        user.getAccountIds().forEach((k, v) -> {
+            if (!oldUser.getAccountIds().containsKey(k)) {
+                datasource.insert_user_accounts(user.getUser_id(), k.getName(), v);
+            } else if (!oldUser.getAccountIds().get(k).equals(v)) {
+                datasource.update_user_accounts(user.getUser_id(), k.getName(), v);
+            }
+        });
+
+        for (User userContact : user.getUserContacts()) {
+            boolean n = false;
+            for (User oldUserContact : oldUser.getUserContacts()) {
+                if (userContact.getUser_id().equals(oldUserContact.getUser_id())) {
+                    n = true;
+                    break;
+                }
+            }
+            if (!n) {
+                datasource.insert_user_user_contacts(user.getUser_id(), userContact.getUser_id());
+            }
+        }
+
+        for (Group groupContact : user.getGroupContacts()) {
+            boolean n = false;
+            for (Group oldGroupContact : oldUser.getGroupContacts()) {
+                if (groupContact.getGroup_id().equals(oldGroupContact.getGroup_id())) {
+                    n = true;
+                    break;
+                }
+            }
+            if (!n) {
+                datasource.insert_user_group_contacts(user.getUser_id(), groupContact.getGroup_id());
+            }
+        }
+
+        user.getGroupContacts().forEach(groupContact -> {
+            if (!oldUser.getGroupContacts().contains(groupContact)) {
+                datasource.insert_user_group_contacts(user.getUser_id(), groupContact.getGroup_id());
+            }
+        });
+    }*/
+
 
     private Group getGroup(ResultSet r) throws SQLException {
         Group group;
